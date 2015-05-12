@@ -51,7 +51,6 @@ static int gpio_drv_write(struct file *file, const char __user *buf, size_t coun
 
 static int gpio_led_ioctl(struct inode * inode, struct file * file,unsigned int cmd,unsigned long arg)
 {
-	unsigned long leddat;
     if(arg > 4)
 
     {
