@@ -7,4 +7,4 @@ clean:
 	make -C $(KERN_DIR) M=$(PWD) modules clean
 	rm -rf modules.order
 
-obj-m += led_drv.o
+obj-m += drv_led.o
