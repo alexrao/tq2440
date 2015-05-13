@@ -1,0 +1,33 @@
+[core]
+	repositoryformatversion = 0
+	filemode = false
+	bare = false
+	logallrefupdates = true
+	symlinks = false
+	ignorecase = true
+[remote "origin"]
+	url = git@github.com:alexrao/tq2440.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "master"]
+	remote = origin
+	merge = refs/heads/master
+[alias]
+	last = log -1
+	br = branch
+	l = "log --color --graph --decorate --pretty=oneline --abbrev-commit"
+	lg = "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+	l0 = "log --color --graph --decorate --pretty=oneline --abbrev-commit -U0"
+	lm = "log --color --graph --decorate --pretty=oneline --abbrev-commit --all"
+	ll = "log --color --graph --decorate --pretty=oneline --abbrev-commit --all --simplify-by-decoration"
+	la = "log --color --graph --decorate"
+	d = "diff --color"
+	dc = "diff --color --cached"
+	d0 = "diff --color --unified=0"
+	ci = "commit"
+	co = "checkout"
+	tr = "checkout --track"
+	s = "status --short"
+	st = "status"
+	rth = "reset HEAD"
+	
+	
