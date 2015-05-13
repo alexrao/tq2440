@@ -56,6 +56,16 @@ static int button_drv_write(struct file *file, const char __user *buf, size_t co
 	int val;
 	printk("button driver data write\n");
 	copy_from_user(&val, buf, count);
+	if (val == 1)
+	{
+		// µãµÆ
+		*gpbdat &= ~((1<<5) | (1<<6) | (1<<7) | (1<<8));
+	}
+	else
+	{
+		// ÃðµÆ
+		*gpbdat |= (1<<5) | (1<<6) | (1<<7) | (1<<8);
+	}
 	return 0;
 }
 
