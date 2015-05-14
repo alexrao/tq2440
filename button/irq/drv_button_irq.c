@@ -14,7 +14,6 @@
 #include <linux/gpio.h>
 #include <linux/device.h>
 
-
 #define __IRQT_FALEDGE IRQ_TYPE_EDGE_FALLING
 #define __IRQT_RISEDGE IRQ_TYPE_EDGE_RISING
 #define __IRQT_LOWLVL IRQ_TYPE_LEVEL_LOW
@@ -30,6 +29,35 @@
 static struct class *button_irq_class;
 static struct class_device *button_irq_class_dev;
 
+volatile unsigned long *gpbdat = NULL;
+volatile unsigned long *gpbcon = NULL;
+
+// LED灯点灯程序
+int gpio_led_init(void)
+{
+	printk("Gpio Leds init");
+
+	*gpbcon &= ~((0x3<<(5*2)) | (0x3<<(6*2)) | (0x3<<(7*2)) | (0x3<<(8*2)));
+	*gpbcon |= ((0x1<<(5*2)) | (0x1<<(6*2)) | (0x1<<(7*2)) | (0x1<<(8*2)));
+	return 0;
+}
+
+// LED等控制处理函数
+void gpio_led_ioctl(unsigned long cmd)
+{
+	printk("led cmd %lu \n",cmd);
+
+	if(cmd > 0x80)
+	{
+		printk("turn off led %lu\n", cmd&0x0F);
+		*gpbdat |= (1 << ((cmd&0x0F)+4));
+	}
+	else
+	{
+		printk("turn on led %lu\n", cmd&0x0F);
+		*gpbdat &= ~(1<<((cmd&0x0F)+4));
+	}
+}
 
 static DECLARE_WAIT_QUEUE_HEAD(button_waitq);
 
@@ -88,6 +116,9 @@ static int button_irq_open(struct inode *inode, struct file *file)
 	request_irq(IRQ_EINT4, button_irq, IRQT_BOTHEDGE, "K2", &pins_desc[1]);
 	request_irq(IRQ_EINT2, button_irq, IRQT_BOTHEDGE, "K3", &pins_desc[2]);
 	request_irq(IRQ_EINT0, button_irq, IRQT_BOTHEDGE, "K4", &pins_desc[3]);
+	printk("irq init ok,now init led\n");
+	gpio_led_init();// 初始化LEDs相关参数
+	printk("init led ok\n");
 
 	return 0;
 }
@@ -111,6 +142,19 @@ ssize_t button_irq_read(struct file *file, char __user *buf, ssize_t size, loff_
 	return 1;
 }
 
+// ioctl 控制相关函数
+static int button_irq_ioctl(struct inode *inode, struct file *file, unsigned int cmd, unsigned long arg)
+{
+	if(arg > 4)
+	{
+		printk("arg > 4\n");
+		return -1;
+	}	
+
+	gpio_led_ioctl(cmd);
+	return 0;
+}
+
 int button_irq_close(struct inode *inode, struct file *file)
 {
 	free_irq(IRQ_EINT1, &pins_desc[0]);
@@ -126,15 +170,19 @@ static struct file_operations button_irq_fops =
     .owner   =  THIS_MODULE,    /* 这是一个宏，推向编译模块时自动创建的__this_module变量 */
 	.open = button_irq_open,
 	.read = button_irq_read,
+	.ioctl = button_irq_ioctl,
 	.release = button_irq_close,
 };
 
 int major;
 static int button_irq_init(void)
 {
+	printk("button irq init\n");
 	major = register_chrdev(0, "button_irq", &button_irq_fops);
 	button_irq_class = class_create(THIS_MODULE, "button_irq");
-	button_irq_class_dev = device_create(button_irq_class, NULL, MKDEV(major, 0), NULL, "buttons");
+	button_irq_class_dev = device_create(button_irq_class, NULL, MKDEV(major, 0), NULL, "button_irq");
+	gpbcon = (volatile unsigned long *) ioremap(0x56000010, 16);
+	gpbdat = gpbcon+1;
 
 	return 0;
 }
@@ -144,6 +192,7 @@ static void button_irq_exit(void)
 	unregister_chrdev(major, "button_irq");
 	device_unregister(button_irq_class_dev);
 	class_destroy(button_irq_class);
+	printk("button irq exit\n");
 	return 0;
 }
 
