@@ -119,19 +119,19 @@ ssize_t mutex_drv_read(struct file *filp, char __user *buf, size_t size, loff_t 
 		return -EINVAL;
 	}
 
-	// if(filp->f_flags & O_NONBLOCK)
-	// {
-	// 	if( !ev_press)
-	// 	{
-	// 		printk("mutex_drv_read O_NONBLOCK\n");
-	// 		return -EAGAIN;
-	// 	}
-	// 	else
-	// 	{
-	// 		printk("mutex_drv_read ev_press == ture\n");
-	// 	}
-	// }
-	// else
+	if(filp->f_flags & O_NONBLOCK)
+	{
+		if( !ev_press)
+		{
+			printk("mutex_drv_read O_NONBLOCK\n");
+			return -EAGAIN;
+		}
+		else
+		{
+			printk("mutex_drv_read ev_press == ture\n");
+		}
+	}
+	else
 	{
 		// 如果没有按键则随眠等待
 		printk("wait_event_interruptible\n");
