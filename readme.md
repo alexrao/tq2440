@@ -29,4 +29,7 @@ kernel: linux-2.6.30.4
 2015.05.20
 1. 添加带打开和读写锁的驱动处理方式
 
-
+2015.05.22
+1. 添加两个定时驱动测试程序
+位置：	./button/timer/button_timer.c 	在之前的基础上添加的测试程序
+		./button/timer/test_timer.c 	简单定时器测试驱动
