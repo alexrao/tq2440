@@ -33,3 +33,7 @@ kernel: linux-2.6.30.4
 1. 添加两个定时驱动测试程序
 位置：	./button/timer/button_timer.c 	在之前的基础上添加的测试程序
 		./button/timer/test_timer.c 	简单定时器测试驱动
+2015.05.29
+1. 添加一个platform_device两个设备驱动之前传送数据的例子
+2. 实现通过drv中获取dev中的相关信息
+详见 ./resource/readme.md 介绍

@@ -13,11 +13,11 @@
 #include <linux/platform_device.h>
 
 
-/* ·ÖÅä/ÉèÖÃ/×¢²áÒ»¸öplatform_device */
+/* åˆ†é…/è®¾ç½®/æ³¨å†Œä¸€ä¸ªplatform_device */
 
 static struct resource led_resource[] = {
     [0] = {
-        .start = 0x56000010,             /* TQ2440µÄLEDÊÇGPB5,6,7,8, GPBCONµØÖ·ÊÇ0x56000010 */
+        .start = 0x56000010,             /* TQ2440çš„LEDæ˜¯GPB5,6,7,8, GPBCONåœ°å€æ˜¯0x56000010 */
         .end   = 0x56000010 + 8 - 1,
         .flags = IORESOURCE_MEM,
     },
@@ -40,19 +40,19 @@ static struct platform_device led_dev = {
     .num_resources    = ARRAY_SIZE(led_resource),
     .resource     = led_resource,
     .dev = { 
-    	.release = led_release, 
-	},
+        .release = led_release, 
+    },
 };
 
 static int led_dev_init(void)
 {
-	platform_device_register(&led_dev);
-	return 0;
+    platform_device_register(&led_dev);
+    return 0;
 }
 
 static void led_dev_exit(void)
 {
-	platform_device_unregister(&led_dev);
+    platform_device_unregister(&led_dev);
 }
 
 module_init(led_dev_init);
