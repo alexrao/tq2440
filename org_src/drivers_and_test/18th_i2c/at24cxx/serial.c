@@ -4,53 +4,53 @@
 #define TXD0READY   (1<<2)
 #define RXD0READY   (1)
 
-#define PCLK            50000000    // init.cÖÐµÄclock_initº¯ÊýÉèÖÃPCLKÎª50MHz
-#define UART_CLK        PCLK        //  UART0µÄÊ±ÖÓÔ´ÉèÎªPCLK
-#define UART_BAUD_RATE  115200      // ²¨ÌØÂÊ
+#define PCLK            50000000    // init.cä¸­çš„clock_initå‡½æ•°è®¾ç½®PCLKä¸º50MHz
+#define UART_CLK        PCLK        //  UART0çš„æ—¶é’Ÿæºè®¾ä¸ºPCLK
+#define UART_BAUD_RATE  115200      // æ³¢ç‰¹çŽ‡
 #define UART_BRD        ((UART_CLK  / (UART_BAUD_RATE * 16)) - 1)
 
 /*
- * ³õÊ¼»¯UART0
- * 115200,8N1,ÎÞÁ÷¿Ø
+ * åˆå§‹åŒ–UART0
+ * 115200,8N1,æ— æµæŽ§
  */
 void uart0_init(void)
 {
-    GPHCON  |= 0xa0;    // GPH2,GPH3ÓÃ×÷TXD0,RXD0
-    GPHUP   = 0x0c;     // GPH2,GPH3ÄÚ²¿ÉÏÀ­
+    GPHCON  |= 0xa0;    // GPH2,GPH3ç”¨ä½œTXD0,RXD0
+    GPHUP   = 0x0c;     // GPH2,GPH3å†…éƒ¨ä¸Šæ‹‰
 
-    ULCON0  = 0x03;     // 8N1(8¸öÊý¾ÝÎ»£¬ÎÞ½ÏÑé£¬1¸öÍ£Ö¹Î»)
-    UCON0   = 0x05;     // ²éÑ¯·½Ê½£¬UARTÊ±ÖÓÔ´ÎªPCLK
-    UFCON0  = 0x00;     // ²»Ê¹ÓÃFIFO
-    UMCON0  = 0x00;     // ²»Ê¹ÓÃÁ÷¿Ø
-    UBRDIV0 = UART_BRD; // ²¨ÌØÂÊÎª115200
+    ULCON0  = 0x03;     // 8N1(8ä¸ªæ•°æ®ä½ï¼Œæ— è¾ƒéªŒï¼Œ1ä¸ªåœæ­¢ä½)
+    UCON0   = 0x05;     // æŸ¥è¯¢æ–¹å¼ï¼ŒUARTæ—¶é’Ÿæºä¸ºPCLK
+    UFCON0  = 0x00;     // ä¸ä½¿ç”¨FIFO
+    UMCON0  = 0x00;     // ä¸ä½¿ç”¨æµæŽ§
+    UBRDIV0 = UART_BRD; // æ³¢ç‰¹çŽ‡ä¸º115200
 }
 
 /*
- * ·¢ËÍÒ»¸ö×Ö·û
+ * å‘é€ä¸€ä¸ªå­—ç¬¦
  */
 void putc(unsigned char c)
 {
-    /* µÈ´ý£¬Ö±µ½·¢ËÍ»º³åÇøÖÐµÄÊý¾ÝÒÑ¾­È«²¿·¢ËÍ³öÈ¥ */
+    /* ç­‰å¾…ï¼Œç›´åˆ°å‘é€ç¼“å†²åŒºä¸­çš„æ•°æ®å·²ç»å…¨éƒ¨å‘é€å‡ºåŽ» */
     while (!(UTRSTAT0 & TXD0READY));
     
-    /* ÏòUTXH0¼Ä´æÆ÷ÖÐÐ´ÈëÊý¾Ý£¬UART¼´×Ô¶¯½«Ëü·¢ËÍ³öÈ¥ */
+    /* å‘UTXH0å¯„å­˜å™¨ä¸­å†™å…¥æ•°æ®ï¼ŒUARTå³è‡ªåŠ¨å°†å®ƒå‘é€å‡ºåŽ» */
     UTXH0 = c;
 }
 
 /*
- * ½ÓÊÕ×Ö·û
+ * æŽ¥æ”¶å­—ç¬¦
  */
 unsigned char getc(void)
 {
-    /* µÈ´ý£¬Ö±µ½½ÓÊÕ»º³åÇøÖÐµÄÓÐÊý¾Ý */
+    /* ç­‰å¾…ï¼Œç›´åˆ°æŽ¥æ”¶ç¼“å†²åŒºä¸­çš„æœ‰æ•°æ® */
     while (!(UTRSTAT0 & RXD0READY));
     
-    /* Ö±½Ó¶ÁÈ¡URXH0¼Ä´æÆ÷£¬¼´¿É»ñµÃ½ÓÊÕµ½µÄÊý¾Ý */
+    /* ç›´æŽ¥è¯»å–URXH0å¯„å­˜å™¨ï¼Œå³å¯èŽ·å¾—æŽ¥æ”¶åˆ°çš„æ•°æ® */
     return URXH0;
 }
 
 /*
- * ÅÐ¶ÏÒ»¸ö×Ö·ûÊÇ·ñÊý×Ö
+ * åˆ¤æ–­ä¸€ä¸ªå­—ç¬¦æ˜¯å¦æ•°å­—
  */
 int isDigit(unsigned char c)
 {
@@ -61,7 +61,7 @@ int isDigit(unsigned char c)
 }
 
 /*
- * ÅÐ¶ÏÒ»¸ö×Ö·ûÊÇ·ñÓ¢ÎÄ×ÖÄ¸
+ * åˆ¤æ–­ä¸€ä¸ªå­—ç¬¦æ˜¯å¦è‹±æ–‡å­—æ¯
  */
 int isLetter(unsigned char c)
 {

@@ -1,101 +1,101 @@
-
-/* ²Î¿¼ 
- * drivers\mtd\nand\s3c2410.c
- * drivers\mtd\nand\at91_nand.c
- */
-
-#include <linux/module.h>
-#include <linux/types.h>
-#include <linux/init.h>
-#include <linux/kernel.h>
-#include <linux/string.h>
-#include <linux/ioport.h>
-#include <linux/platform_device.h>
-#include <linux/delay.h>
-#include <linux/err.h>
-#include <linux/slab.h>
-#include <linux/clk.h>
- 
-#include <linux/mtd/mtd.h>
-#include <linux/mtd/nand.h>
-#include <linux/mtd/nand_ecc.h>
-#include <linux/mtd/partitions.h>
- 
-#include <asm/io.h>
- 
-#include <asm/arch/regs-nand.h>
-#include <asm/arch/nand.h>
-
-
-static struct nand_chip *s3c_nand;
-static struct mtd_info *s3c_mtd;
-
-static void s3c2440_select_chip(struct mtd_info *mtd, int chipnr)
-{
-	if (chipnr == -1)
-	{
-		/* È¡ÏûÑ¡ÖĞ: NFCONT[1]ÉèÎª0 */
-	}
-	else
-	{
-		/* Ñ¡ÖĞ: NFCONT[1]ÉèÎª1 */
-		
-	}
-}
-
-static void s3c2440_cmd_ctrl(struct mtd_info *mtd, int dat, unsigned int ctrl)
-{
-	if (ctrl & NAND_CLE)
-	{
-		/* ·¢ÃüÁî: NFCMMD=dat */
-	}
-	else
-	{
-		/* ·¢µØÖ·: NFADDR=dat */
-	}
-}
-
-static int s3c2440_dev_ready(struct mtd_info *mtd)
-{
-	return "NFSTATµÄbit[0]";
-}
-
-
-static int s3c_nand_init(void)
-{
-	/* 1. ·ÖÅäÒ»¸önand_chip½á¹¹Ìå */
-	s3c_nand = kzalloc(sizeof(struct nand_chip), GFP_KERNEL);
-	
-	/* 2. ÉèÖÃnand_chip */
-	/* ÉèÖÃnand_chipÊÇ¸ønand_scanº¯ÊıÊ¹ÓÃµÄ, Èç¹û²»ÖªµÀÔõÃ´ÉèÖÃ, ÏÈ¿´nand_scanÔõÃ´Ê¹ÓÃ 
-	 * ËüÓ¦¸ÃÌá¹©:Ñ¡ÖĞ,·¢ÃüÁî,·¢µØÖ·,·¢Êı¾İ,¶ÁÊı¾İ,ÅĞ¶Ï×´Ì¬µÄ¹¦ÄÜ
-	 */
-	s3c_nand->select_chip = s3c2440_select_chip;
-	s3c_nand->cmd_ctrl    = s3c2440_cmd_ctrl;
-	s3c_nand->IO_ADDR_R   = "NFDATAµÄĞéÄâµØÖ·";
-	s3c_nand->IO_ADDR_W   = "NFDATAµÄĞéÄâµØÖ·";
-	s3c_nand->dev_ready   = s3c2440_dev_ready;
-	
-	/* 3. Ó²¼şÏà¹ØµÄÉèÖÃ */
-	
-	/* 4. Ê¹ÓÃ: nand_scan */
-	s3c_mtd = kzalloc(sizeof(struct mtd_info), GFP_KERNEL);
-	s3c_mtd->owner = THIS_MODULE;
-	s3c_mtd->priv  = s3c_nand;
-	
-	nand_scan(s3c_mtd, 1);  /* Ê¶±ğNAND FLASH, ¹¹Ôìmtd_info */
-	
-	/* 5. add_mtd_partitions */
-	
-	return 0;
-}
-
-static void s3c_nand_exit(void)
-{
-}
-
-module_init(s3c_nand_init);
-module_exit(s3c_nand_exit);
-
-MODULE_LICENSE("GPL");
-
+
+/* å‚è€ƒ 
+ * drivers\mtd\nand\s3c2410.c
+ * drivers\mtd\nand\at91_nand.c
+ */
+
+#include <linux/module.h>
+#include <linux/types.h>
+#include <linux/init.h>
+#include <linux/kernel.h>
+#include <linux/string.h>
+#include <linux/ioport.h>
+#include <linux/platform_device.h>
+#include <linux/delay.h>
+#include <linux/err.h>
+#include <linux/slab.h>
+#include <linux/clk.h>
+ 
+#include <linux/mtd/mtd.h>
+#include <linux/mtd/nand.h>
+#include <linux/mtd/nand_ecc.h>
+#include <linux/mtd/partitions.h>
+ 
+#include <asm/io.h>
+ 
+#include <asm/arch/regs-nand.h>
+#include <asm/arch/nand.h>
+
+
+static struct nand_chip *s3c_nand;
+static struct mtd_info *s3c_mtd;
+
+static void s3c2440_select_chip(struct mtd_info *mtd, int chipnr)
+{
+	if (chipnr == -1)
+	{
+		/* å–æ¶ˆé€‰ä¸­: NFCONT[1]è®¾ä¸º0 */
+	}
+	else
+	{
+		/* é€‰ä¸­: NFCONT[1]è®¾ä¸º1 */
+		
+	}
+}
+
+static void s3c2440_cmd_ctrl(struct mtd_info *mtd, int dat, unsigned int ctrl)
+{
+	if (ctrl & NAND_CLE)
+	{
+		/* å‘å‘½ä»¤: NFCMMD=dat */
+	}
+	else
+	{
+		/* å‘åœ°å€: NFADDR=dat */
+	}
+}
+
+static int s3c2440_dev_ready(struct mtd_info *mtd)
+{
+	return "NFSTATçš„bit[0]";
+}
+
+
+static int s3c_nand_init(void)
+{
+	/* 1. åˆ†é…ä¸€ä¸ªnand_chipç»“æ„ä½“ */
+	s3c_nand = kzalloc(sizeof(struct nand_chip), GFP_KERNEL);
+	
+	/* 2. è®¾ç½®nand_chip */
+	/* è®¾ç½®nand_chipæ˜¯ç»™nand_scanå‡½æ•°ä½¿ç”¨çš„, å¦‚æœä¸çŸ¥é“æ€ä¹ˆè®¾ç½®, å…ˆçœ‹nand_scanæ€ä¹ˆä½¿ç”¨ 
+	 * å®ƒåº”è¯¥æä¾›:é€‰ä¸­,å‘å‘½ä»¤,å‘åœ°å€,å‘æ•°æ®,è¯»æ•°æ®,åˆ¤æ–­çŠ¶æ€çš„åŠŸèƒ½
+	 */
+	s3c_nand->select_chip = s3c2440_select_chip;
+	s3c_nand->cmd_ctrl    = s3c2440_cmd_ctrl;
+	s3c_nand->IO_ADDR_R   = "NFDATAçš„è™šæ‹Ÿåœ°å€";
+	s3c_nand->IO_ADDR_W   = "NFDATAçš„è™šæ‹Ÿåœ°å€";
+	s3c_nand->dev_ready   = s3c2440_dev_ready;
+	
+	/* 3. ç¡¬ä»¶ç›¸å…³çš„è®¾ç½® */
+	
+	/* 4. ä½¿ç”¨: nand_scan */
+	s3c_mtd = kzalloc(sizeof(struct mtd_info), GFP_KERNEL);
+	s3c_mtd->owner = THIS_MODULE;
+	s3c_mtd->priv  = s3c_nand;
+	
+	nand_scan(s3c_mtd, 1);  /* è¯†åˆ«NAND FLASH, æ„é€ mtd_info */
+	
+	/* 5. add_mtd_partitions */
+	
+	return 0;
+}
+
+static void s3c_nand_exit(void)
+{
+}
+
+module_init(s3c_nand_init);
+module_exit(s3c_nand_exit);
+
+MODULE_LICENSE("GPL");
+

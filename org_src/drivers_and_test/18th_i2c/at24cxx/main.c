@@ -11,10 +11,10 @@ int main()
     char c;
     char str[200];
     int i;
-	int address;
-	int data;
+    int address;
+    int data;
     
-    uart0_init();   // ²¨ÌØÂÊ115200£¬8N1(8¸öÊı¾İÎ»£¬ÎŞĞ£ÑéÎ»£¬1¸öÍ£Ö¹Î»)
+    uart0_init();   // æ³¢ç‰¹ç‡115200ï¼Œ8N1(8ä¸ªæ•°æ®ä½ï¼Œæ— æ ¡éªŒä½ï¼Œ1ä¸ªåœæ­¢ä½)
     
     i2c_init();
     
@@ -49,9 +49,9 @@ int main()
                 }
 
                 sscanf(str, "%d", &address);
-				printf("\r\nread address = %d\r\n", address);
-				data = at24cxx_read(address);
-				printf("data = %d\r\n", data);
+                printf("\r\nread address = %d\r\n", address);
+                data = at24cxx_read(address);
+                printf("data = %d\r\n", data);
                     
                 break;
             }
@@ -68,7 +68,7 @@ int main()
                     putc(c);
                 } while(c != '\n' && c != '\r');
                 str[i] = '\0';
-				printf("\r\n");
+                printf("\r\n");
 
                 while(--i >= 0)
                 {
@@ -77,7 +77,7 @@ int main()
                 }
 
                 sscanf(str, "%d", &address);
-				//printf("get str %s\r\n", str);
+                //printf("get str %s\r\n", str);
 
                 printf("Enter data: ");
                 i = 0;
@@ -88,8 +88,8 @@ int main()
                     putc(c);
                 } while(c != '\n' && c != '\r');
                 str[i] = '\0';
-				printf("\r\n");
-				//printf("get str %s\r\n", str);
+                printf("\r\n");
+                //printf("get str %s\r\n", str);
 
                 while(--i >= 0)
                 {
@@ -98,11 +98,11 @@ int main()
                 }
 
                 sscanf(str, "%d", &data);
-				//address = 12;
-				//data = 13;
-				printf("write address %d with data %d\r\n", address, data);
-				
-				at24cxx_write(address, data);
+                //address = 12;
+                //data = 13;
+                printf("write address %d with data %d\r\n", address, data);
+                
+                at24cxx_write(address, data);
 
                 break;
             }
